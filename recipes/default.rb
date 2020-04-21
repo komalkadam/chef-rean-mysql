@@ -10,22 +10,12 @@ bash 'Install Java Open JDK 1.8' do
     cwd '/tmp'
     code <<-EOH
     cd /tmp
-    wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
-    yum -y install ./mysql57-community-release-el7-7.noarch.rpm
-    yum -y install mysql-community-server
-    systemctl start mysqld 
-    temp_password=$(grep password /var/log/mysqld.log | awk '{print $NF}')
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{root_password}'; flush privileges;" > reset_pass.sql
-    mysql -u root --password="$temp_password" --connect-expired-password < reset_pass.sql
+    sudo yum -y install @mysql
+    systemctl start mysqld
+    systemctl enable --now mysqld
+    systemctl status mysqld
+    echo  "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; flush privileges;" > reset_pass.sql
+    mysql -u root < reset_pass.sql
+    mysql -uroot -proot -e "CREATE DATABASE demo"
     EOH
 end
-
-unless default_database.empty?
-    bash 'Creating Default Database' do
-        user 'root'
-        cwd '/tmp'
-        code <<-EOH
-        mysql -uroot -p#{root_password} -e "CREATE DATABASE #{default_database}"
-        EOH
-    end
-end    
