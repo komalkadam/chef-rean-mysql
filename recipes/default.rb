@@ -11,11 +11,11 @@ bash 'Install Java Open JDK 1.8' do
     code <<-EOH
     cd /tmp
     sudo yum -y install @mysql
-    systemctl start mysqld
-    systemctl enable --now mysqld
-    systemctl status mysqld
+    sudo systemctl start mysqld
+    sudo systemctl enable --now mysqld
+    sudo systemctl status mysqld
     echo  "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; flush privileges;" > reset_pass.sql
-    mysql -u root < reset_pass.sql
-    mysql -uroot -proot -e "CREATE DATABASE demo"
+    sudo mysql -u root < reset_pass.sql
+    sudo mysql -uroot -proot -e "CREATE DATABASE demo"
     EOH
 end
