@@ -14,8 +14,8 @@ bash 'Install Java Open JDK 1.8' do
     sudo systemctl start mariadb
     sudo systemctl enable --now mariadb
     sudo systemctl status mariadb
-    echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root'); flush privileges;" > reset_pass.sql
+    echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('#{root_password}'); flush privileges;" > reset_pass.sql
     sudo mysql -u root < reset_pass.sql
-    sudo mysql -uroot -proot -e "CREATE DATABASE demo"
+    sudo mysql -uroot -proot -e "CREATE DATABASE #{default_database}"
     EOH
 end
